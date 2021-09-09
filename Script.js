@@ -167,16 +167,26 @@ var MainGameScene = enchant.Class.create(enchant.Scene, {
         //通学路BGM
         game.assets['tuugakuroBGM'].play();
 
+  /*      //出題テキスト読み込み
+        var message = [
+            'わがはいねこである',
+            'なまえはまだない',
+            'なんとかかんとか',
+            'ぺろぺろ'
+        ];
         //出題テキスト表示
-        var talkText = "おはようおにいちゃん";
-        var label = new Label();
-        label.text = talkText;
-        label.color = 'white';
-        label.font = '25px sans-serif';
-        label.x = 140; 
-        label.y = 610; 
-        label.width = GAME_SCREEN_WIDTH;
-        screen.addChild(label);
+        var msgCount = 0;
+        var talkText = message[msgCount];
+        var mondai = new Label();
+    //    mondai.text = talkText;
+        mondai.color = 'white';
+        mondai.font = '25px sans-serif';
+        mondai.x = 140; 
+        mondai.y = 610; 
+        mondai.width = GAME_SCREEN_WIDTH;
+        MondaiHyouji(mondai, talkText, msgCount, message);
+        screen.addChild(mondai);*/
+        var mondaiBun = new MondaiHyouji();
 
         // ヘボン式
         var result1 = kanaToRoman(talkText);
@@ -222,7 +232,7 @@ var MainGameScene = enchant.Class.create(enchant.Scene, {
             if(the_Key == result1[mojiCount] || the_Key == result2[mojiCount] || the_Key == result3[mojiCount]){
                 if(mojiCount == 0){
                     nyuuryokuMoji = the_Key;
-                    screen.addChild(resultText);
+                    screen.addChild(resultText);//テキスト表示
                 }else{
                     nyuuryokuMoji += the_Key;
                 }
@@ -246,16 +256,52 @@ var MainGameScene = enchant.Class.create(enchant.Scene, {
         this.addEventListener('enterframe', function(){
             if(mojiCount == result1.length){
                 console.log("clear");
-                alert('おわり');
                 mojiCount = 0;
+                msgCount ++;
+                //テキスト入れかえ
+                talkText = message[msgCount];
+                MondaiHyouji(talkText);
+                screen.addChild(mondai);
             }
-            
+            var msgLength;
+            msgLength = message.length;
+            if(msgCount + 1 == msgLength){
+                alert('おわり');
+            }
         });
     },
 });
 
+var MondaiHyouji = function(mondai, talkText, msgCount, message){
+    //    mondai.text = talkText;
+        mondai.color = 'white';
+        mondai.font = '25px sans-serif';
+        mondai.x = 140; 
+        mondai.y = 610; 
+        mondai.width = GAME_SCREEN_WIDTH;
+        MondaiHyouji(mondai, talkText, msgCount, message);
+        screen.addChild(mondai);
+}
+var MondaiHyouji = class {
+    constructor() { /* コンストラクタ */
+        var message = [
+            'わがはいねこである',
+            'なまえはまだない',
+            'なんとかかんとか',
+            'ぺろぺろ'
+        ];
+        //出題テキスト表示
+        var msgCount = 0;
+        var talkText;
+        var mondai = new Label();
+    }
 
-
+    textSet() {  // テキストセット
+        talkText = message[msgCount];
+        return talkText;
+    }
+    
+  }
 /**
  * ひらがなまたはカタカナからローマ字へ変換
  * @param {string} targetStr ローマ字へ変換する文字列（変換元の文字列）
